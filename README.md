@@ -1,1 +1,1 @@
-This api get the current weather data and forecast for next 7 days.
+This API provide by city the current weather data and forecast for next 7 days from the resquest.
