@@ -1,0 +1,6 @@
+
+# Django
+# ------------------------------------------------------------------------------
+Django==3.1.5  # https://www.djangoproject.com/
+django-environ==0.4.5  # https://github.com/joke2k/django-environ
+psycopg2-binary==2.8.5

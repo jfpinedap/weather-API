@@ -1,0 +1,36 @@
+version: '3'
+
+volumes:
+  local_postgres_data: {}
+  local_postgres_data_backups: {}
+
+services:
+  web:
+    container_name: weatherapi_local_django
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: weatherapi_local_django
+    volumes:
+      - .:/app
+    env_file:
+      - ./.envs/.local
+    ports:
+      - "8000:8000"
+    depends_on: 
+      - "db-postgres"
+    command: /start
+    restart: always
+    
+  db-postgres:
+    container_name: weatherapi_local_postgres
+    image: postgres:latest
+    volumes:
+      - local_postgres_data:/var/lib/postgresql/data
+      - local_postgres_data_backups:/backups
+    env_file:
+      - ./.envs/.local
+    ports:
+      - "5432"
+    restart: always
+
