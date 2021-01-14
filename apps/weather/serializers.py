@@ -6,12 +6,20 @@ Weather Serializers
 from rest_framework.serializers import ModelSerializer
 
 # Models
-from .models import Weather
+from . import models
 
 
 class WeatherSerializer(ModelSerializer):
     """Serializer for data Weather"""
 
     class Meta:
-        model = Weather
+        model = models.Weather
+        exclude = ['id']
+
+
+class ForecastSerializer(ModelSerializer):
+    """Serializer for data Forecast"""
+
+    class Meta:
+        model = models.Forecast
         exclude = ['id']
