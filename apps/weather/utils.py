@@ -51,7 +51,6 @@ def beaufort_label(wind_speed: float) -> str:
         'Moderate breeze', 'Fresh breeze', 'Strong breeze',
         'Near Gale', 'Fresh Gale', 'Strong Gale', 'Storm',
         'Violent storm', 'Hurricane-force'
-
     ]
 
     def lq(x: float) -> bool:
@@ -99,7 +98,6 @@ def weather_request(city: str, country: str) -> dict:
         )
         + '&appid={0}'.format(OPENWEATHER_APPID)
     )
-    print('url: ', url)
     r = requests.get(url)
     return json.loads(r.text)
 
@@ -114,6 +112,5 @@ def forecast_request(lat: float, lon: float) -> dict:
         + '&units=metric'
         + '&appid={0}'.format(OPENWEATHER_APPID)
     )
-    print('url: ', url)
     r = requests.get(url)
     return json.loads(r.text)

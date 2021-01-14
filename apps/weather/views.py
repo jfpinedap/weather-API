@@ -4,12 +4,13 @@ View of Weather
 
 # Libraries
 from django.conf import settings
+from django.http import JsonResponse
 from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
+from django.views.decorators.cache import cache_page
 
-from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework import status
 from rest_framework.response import Response
 
 
@@ -69,6 +70,8 @@ class WeatherView(APIView):
         serializer = self.serializer(weather)
 
         return Response(
-            data={'Response': serializer.data}
+            data={
+                'Response': serializer.data
+            }
         )
         
