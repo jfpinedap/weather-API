@@ -23,8 +23,8 @@ services:
     restart: always
     
   db-postgres:
-    container_name: weatherapi_local_postgres
     image: postgres:latest
+    container_name: weatherapi_local_postgres
     volumes:
       - local_postgres_data:/var/lib/postgresql/data
       - local_postgres_data_backups:/backups

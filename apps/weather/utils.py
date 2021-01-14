@@ -12,10 +12,12 @@ OPENWEATHER_URL = environ.Env().str(
     'https://api.openweathermap.org'
 )
 
+
 OPENWEATHER_APPID = environ.Env().str(
     'OPENWEATHER_APPID',
     ''
 )
+
 
 def degrees_to_cardinal(deg: int) -> str:
     """
@@ -29,6 +31,7 @@ def degrees_to_cardinal(deg: int) -> str:
     ]
     idx = round(deg / (360. / len(directions)))
     return directions[idx % len(directions)]
+
 
 def beaufort_label(wind_speed: float) -> str:
     """
@@ -73,11 +76,13 @@ def get_wind(wind: dict) -> str:
         degrees_to_cardinal(deg=wind.get('deg', 0))
     ])
 
+
 def get_hour(utc_time: int, timezone: int) -> str:
     """
     Extract and transform hour from UTC time and timezone.
     """
     return strftime("%H:%M", gmtime(utc_time + timezone))
+
 
 def get_date(utc_time: int, timezone: int) -> str:
     """
@@ -85,12 +90,28 @@ def get_date(utc_time: int, timezone: int) -> str:
     """
     return strftime("%Y-%m-%d %H:%M:%S", gmtime(utc_time + timezone))
 
+
 def weather_request(city: str, country: str) -> dict:
     url = (
         OPENWEATHER_URL
         + '/data/2.5/weather?q={0},{1}&units=metric'.format(
             city, country
         )
+        + '&appid={0}'.format(OPENWEATHER_APPID)
+    )
+    print('url: ', url)
+    r = requests.get(url)
+    return json.loads(r.text)
+
+
+def forecast_request(lat: float, lon: float) -> dict:
+    url = (
+        OPENWEATHER_URL
+        + '/data/2.5/onecall?lat={0}&lon={1}'.format(
+            lat, lon
+        )
+        + '&exclude=current,hourly,minutely,alerts'
+        + '&units=metric'
         + '&appid={0}'.format(OPENWEATHER_APPID)
     )
     print('url: ', url)

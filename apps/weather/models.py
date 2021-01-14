@@ -83,3 +83,69 @@ class Weather(models.Model):
 
     class Meta:
         managed = False
+
+
+class Forecast(models.Model):
+    """
+    Forecast Model
+    Defines the attributes of a weather forecast
+    """
+    forecast_date = models.CharField(max_length=255)
+    temperature = models.CharField(max_length=255)
+    wind = models.CharField(max_length=255)
+    cloudiness = models.CharField(max_length=255)
+    pressure = models.CharField(max_length=255)
+    humidity = models.CharField(max_length=255)
+    sunrise = models.CharField(max_length=255)
+    sunset = models.CharField(max_length=255)
+
+    def __init__(self, timezone_offset, *args, **kwargs):
+        """
+        Init method is used to extract data from OpenWeather response
+        and transform to required Weather model.
+        """
+        kwargs = self.__extract_transform(timezone_offset, **kwargs)
+        super().__init__(*args, **kwargs)
+
+    def __extract_transform(self, timezone_offset, **kwargs):
+        return {
+            'forecast_date': get_date(
+                utc_time=kwargs.get('dt', 0),
+                timezone=timezone_offset
+            ),
+            'temperature': '{0} °C'.format(
+                kwargs.get('temp', '').get('day', 0)
+            ),
+            'wind': get_wind(
+                wind={
+                    'speed': kwargs.get('wind_speed', ''),
+                    'deg': kwargs.get('wind_deg', '')
+                }
+            ),
+            'cloudiness': kwargs.get(
+                'weather', [{}])[0].get('description', ''
+            ).capitalize(),
+            'pressure': '{} hpa'.format(
+                kwargs.get('pressure', '')
+            ),
+            'humidity': '{}%'.format(
+                kwargs.get('humidity', '')
+            ),
+            'sunrise': get_hour(
+                utc_time=kwargs.get('sunrise', 0),
+                timezone=timezone_offset
+            ),
+            'sunset': get_hour(
+                utc_time=kwargs.get('sunset', 0),
+                timezone=timezone_offset
+            )
+        }
+
+    def save(self, *args, **kwargs):
+        """
+        Override the model's save method to prevent saving to the database
+        """
+        pass
+
+    class Meta:
+        managed = False
