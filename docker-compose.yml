@@ -3,9 +3,10 @@ version: '3'
 volumes:
   local_postgres_data: {}
   local_postgres_data_backups: {}
+  redis: {}
 
 services:
-  web:
+  django:
     container_name: weatherapi_local_django
     build:
       context: .
@@ -19,12 +20,13 @@ services:
       - "8000:8000"
     depends_on: 
       - "db-postgres"
+      - "redis"
     command: /start
     restart: always
     
   db-postgres:
-    image: postgres:latest
     container_name: weatherapi_local_postgres
+    image: postgres:latest
     volumes:
       - local_postgres_data:/var/lib/postgresql/data
       - local_postgres_data_backups:/backups
@@ -33,4 +35,13 @@ services:
     ports:
       - "5432"
     restart: always
-
+    
+  redis:
+    env_file:
+      - ./.envs/.local
+    image: "redis:6.0.7-alpine"
+    ports:
+      - '6379'
+    volumes:
+      - "redis:/data"
+    restart: on-failure
