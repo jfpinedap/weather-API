@@ -8,5 +8,5 @@ from . import views
 app_name='weather'
 
 urlpatterns = [
-    path('', views.WeatherGetView.as_view(), name='weather'),
+    path('', views.WeatherView.as_view(), name='weather'),
 ]
