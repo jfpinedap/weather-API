@@ -17,7 +17,7 @@ from pathlib import Path
 
 BASE_DIR = (
     environ.Path(__file__) - 3
-)  # (srouter/config/settings/base.py - 3 = app/)
+)
 APPS_DIR = BASE_DIR.path("apps")
 
 env = environ.Env()
@@ -39,7 +39,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    'apps.weather',
+    'apps.weather.apps.WeatherConfig',
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -137,12 +137,10 @@ CACHES = {
         'LOCATION': env.str("CELERY_BROKER_BACKEND", 'redis://127.0.0.1:6379/1'),
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        },
-        'KEY_PREFIX': 'weather'
+        }
     }
 }
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-
 # Cache time to live is 2 minutes.
 CACHE_TTL = 60 * 2

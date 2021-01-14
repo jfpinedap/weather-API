@@ -45,6 +45,7 @@ nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
+.pytest_cache/
 
 # Translations
 *.mo
@@ -66,7 +67,7 @@ target/
 celerybeat-schedule.db
 
 # Environments
-.envs/
+.local
 .venv
 venv/
 ENV/
@@ -318,6 +319,3 @@ Session.vim
 
 # Auto-generated tag files
 tags
-
-
-### Project template
