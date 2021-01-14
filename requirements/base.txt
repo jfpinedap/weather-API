@@ -1,6 +1,7 @@
-
-# Django
-# ------------------------------------------------------------------------------
-Django==3.1.5  # https://www.djangoproject.com/
-django-environ==0.4.5  # https://github.com/joke2k/django-environ
-psycopg2-binary==2.8.5
+Django==3.1.5
+django-environ==0.4.5
+djangorestframework==3.11.1
+djangorestframework-simplejwt==4.4.0
+psycopg2==2.8.6
+PyJWT==1.7.1
+requests==2.25.1
