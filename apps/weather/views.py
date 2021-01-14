@@ -3,8 +3,12 @@ View of Weather
 """
 
 # Libraries
-from django.http import JsonResponse
 from django.conf import settings
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
+
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -19,6 +23,8 @@ from . import serializers
 from .utils import weather_request, forecast_request
 
 
+CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+
 class WeatherView(APIView):
     """
     Weather View
@@ -27,6 +33,7 @@ class WeatherView(APIView):
     model = models.Weather
     serializer = serializers.WeatherSerializer
 
+    @method_decorator(cache_page(CACHE_TTL))
     def get(self, request):
         city = request.GET.get('city', None)
         country = request.GET.get('country', None)
@@ -41,7 +48,10 @@ class WeatherView(APIView):
         if response.get('cod', 404) == 200:
             weather = models.Weather(**response)
         else:
-            return JsonResponse(response)
+            return Response(
+                data=response.get('message', "city not found"),
+                status=status.HTTP_404_NOT_FOUND
+            )
 
         # Get forecast from OpenWeather
         forecast_response = forecast_request(lat=lat, lon=lon)
@@ -58,7 +68,7 @@ class WeatherView(APIView):
         weather.forecast = forecast
         serializer = self.serializer(weather)
 
-        return Response({
-            'Response': serializer.data
-        })
+        return Response(
+            data={'Response': serializer.data}
+        )
         
